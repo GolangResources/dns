@@ -34,7 +34,7 @@ func main() {
                                 A:   net.IPv4(127, 0, 0, 1),
                         },
         }
-        msg.RemoveName(msgDNSRemoveNames)
+        msg.Remove(msgDNSRemoveNames)
         //ADD RECORD
         msgDNSAddNames := []dns.RR{
                         &dns.A{
