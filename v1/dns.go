@@ -44,3 +44,42 @@ func (s *DNSClient) SendMsg(m *dns.Msg) (msgAnswer []dns.RR, err error) {
 	}
 	return r.Answer, nil
 }
+
+func (s *DNSClient) AddDNS(zone string, fqdn string, ip string, ttl uint32) error {
+	msg := new(dns.Msg)
+	msg.SetUpdate(zone)
+	msgRR := []dns.RR{
+		&dns.A{
+			Hdr: dns.RR_Header{Name: dns.Fqdn(fqdn), Rrtype: dns.TypeA, Class: dns.ClassINET, Ttl: ttl},
+			A:   net.ParseIP(ip),
+		},
+	}
+	msg.Insert(msgRR)
+	_, err := s.SendMsg(msg)
+	return err
+}
+
+func (s *DNSClient) DelDNS(zone string, fqdn string, ip string, ttl uint32) error {
+	msg := new(dns.Msg)
+	msg.SetUpdate(zone)
+	msgRR := []dns.RR{
+		&dns.A{
+			Hdr: dns.RR_Header{Name: dns.Fqdn(fqdn), Rrtype: dns.TypeA, Class: dns.ClassINET, Ttl: ttl},
+			A:   net.ParseIP(ip),
+		},
+	}
+	msg.Remove(msgRR)
+	_, err := s.SendMsg(msg)
+	return err
+}
+
+func (s *DNSClient) DelAllDNS(zone string, fqdn string) error {
+	msg := new(dns.Msg)
+	msg.SetUpdate(zone)
+	msgRR := []dns.RR{
+		&dns.RR_Header{Name: dns.Fqdn(fqdn)},
+	}
+	msg.RemoveName(msgRR)
+	_, err := s.SendMsg(msg)
+	return err
+}

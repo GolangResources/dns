@@ -5,6 +5,33 @@
 package main
 
 import (
+        "github.com/GolangResources/dns/v1"
+        "log"
+)
+
+const (
+	ZONE = "companydomain.com."
+)
+
+func main() {
+        dnsConf := dnsc.DNSClient{
+                MasterDNS: "127.0.0.1",
+                MasterDNSPort: "53",
+                Debug: false,
+        }
+        d := dnsc.Init(&dnsConf)
+	log.Println(d.AddDNS(ZONE, "lol.companydomain.com", "127.0.0.1", uint32(30)))
+	log.Println(d.AddDNS(ZONE, "lol.companydomain.com", "127.0.0.2", uint32(30)))
+	log.Println(d.DelDNS(ZONE, "lol.companydomain.com", "127.0.0.2", uint32(30)))
+	log.Println(d.DelAllDNS(ZONE, "lol.companydomain.com"))
+}
+```
+
+## Examples with RAW Requests
+```
+package main
+
+import (
         "github.com/miekg/dns"
         "github.com/GolangResources/dns/v1"
         "net"
